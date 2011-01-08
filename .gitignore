@@ -1,0 +1,7 @@
+/obj
+/bin
+/.cccc
+*.bmarks
+*.layout
+*.depend
+*.cfg

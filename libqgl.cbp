@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6" />
+	<Project>
+		<Option title="libqgl" />
+		<Option pch_mode="2" />
+		<Option compiler="gcc" />
+		<Build>
+			<Target title="Debug">
+				<Option output="bin\Debug\libqgl" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DBUILD_QGL" />
+					<Add directory="include\qgl" />
+				</Compiler>
+			</Target>
+			<Target title="Release">
+				<Option output="bin\Release\libqgl" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="3" />
+				<Option compiler="gcc" />
+				<Option createDefFile="1" />
+				<Option createStaticLib="1" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_QGL" />
+					<Add directory="include\qgl" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+				</Linker>
+			</Target>
+		</Build>
+		<Compiler>
+			<Add directory="$(#sdl.include)" />
+			<Add directory="$(#sdl_image.include)" />
+			<Add directory="$(#sdl_ttf.include)" />
+			<Add directory="$(#sdl_net.include)" />
+			<Add directory="$(#glew.include)" />
+			<Add directory="$(#sigc.include)" />
+		</Compiler>
+		<Linker>
+			<Add library="SDL" />
+			<Add library="SDL_image" />
+			<Add library="SDL_ttf" />
+			<Add library="SDL_net" />
+			<Add library="glew32" />
+			<Add library="opengl32" />
+			<Add library="glu32" />
+			<Add library="sigc++" />
+			<Add directory="$(#sdl.lib)" />
+			<Add directory="$(#sdl_image.lib)" />
+			<Add directory="$(#sdl_ttf.lib)" />
+			<Add directory="$(#sdl_net.lib)" />
+			<Add directory="$(#glew.lib)" />
+			<Add directory="$(#sigc.lib)" />
+		</Linker>
+		<Unit filename="include\qgl\Button.h" />
+		<Unit filename="include\qgl\ColorFormat.h" />
+		<Unit filename="include\qgl\Font.h" />
+		<Unit filename="include\qgl\FrameBuffer.h" />
+		<Unit filename="include\qgl\GraphicContext.h" />
+		<Unit filename="include\qgl\Image.h" />
+		<Unit filename="include\qgl\Input.h" />
+		<Unit filename="include\qgl\IpAddress.h" />
+		<Unit filename="include\qgl\Key.h" />
+		<Unit filename="include\qgl\Label.h" />
+		<Unit filename="include\qgl\Lock.h" />
+		<Unit filename="include\qgl\MouseButton.h" />
+		<Unit filename="include\qgl\Mutex.h" />
+		<Unit filename="include\qgl\Screen.h" />
+		<Unit filename="include\qgl\ScreenItem.h" />
+		<Unit filename="include\qgl\SdlSentry.h" />
+		<Unit filename="include\qgl\Shader.h" />
+		<Unit filename="include\qgl\Thread.h" />
+		<Unit filename="include\qgl\UdpSocket.h" />
+		<Unit filename="include\qgl\Vector.h" />
+		<Unit filename="include\qgl\Window.h" />
+		<Unit filename="include\qgl\config.h" />
+		<Unit filename="include\qgl\utils.h" />
+		<Unit filename="src\Button.cpp" />
+		<Unit filename="src\ColorFormat.cpp" />
+		<Unit filename="src\Font.cpp" />
+		<Unit filename="src\FrameBuffer.cpp" />
+		<Unit filename="src\GraphicContext.cpp" />
+		<Unit filename="src\Image.cpp" />
+		<Unit filename="src\Input.cpp" />
+		<Unit filename="src\IpAddress.cpp" />
+		<Unit filename="src\Label.cpp" />
+		<Unit filename="src\Mutex.cpp" />
+		<Unit filename="src\Screen.cpp" />
+		<Unit filename="src\ScreenItem.cpp" />
+		<Unit filename="src\SdlSentry.cpp" />
+		<Unit filename="src\Shader.cpp" />
+		<Unit filename="src\Thread.cpp" />
+		<Unit filename="src\UdpSocket.cpp" />
+		<Unit filename="src\Window.cpp" />
+		<Unit filename="src\utils.cpp" />
+		<Extensions>
+			<code_completion />
+			<envvars />
+			<debugger />
+			<lib_finder disable_auto="1" />
+		</Extensions>
+	</Project>
+</CodeBlocks_project_file>
