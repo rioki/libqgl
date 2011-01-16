@@ -46,10 +46,29 @@ namespace qgl
 
         void draw_rect(const Vector2f& pos, const Vector2f& size);
 
-
         void draw_image(float x, float y, const Image& image);
 
         void draw_image(Vector2f pos, const Image& image);
+
+        /**
+         * Draw image.
+         **/
+        void draw_image(const Image& image);
+
+        /**
+         * Push the model view matrix onto the stack.
+         **/
+        void push_model_view_matrix();
+
+        /**
+         * Pop the model view matrix of the stack.
+         **/
+        void pop_model_view_matrix();
+
+        /**
+         * Translate in 2D
+         **/
+        void translate(const Vector2f& value);
 
         void swap_buffers();
 

@@ -123,6 +123,30 @@ namespace qgl
     }
 
 //------------------------------------------------------------------------------
+    void GraphicContext::draw_image(const Image& image)
+    {
+        draw_image(0, 0, image);
+    }
+
+//------------------------------------------------------------------------------
+    void GraphicContext::push_model_view_matrix()
+    {
+        glPushMatrix();
+    }
+
+//------------------------------------------------------------------------------
+    void GraphicContext::pop_model_view_matrix()
+    {
+        glPopMatrix();
+    }
+
+//------------------------------------------------------------------------------
+    void GraphicContext::translate(const Vector2f& value)
+    {
+        glTranslatef(value(0), value(1), 0.0f);
+    }
+
+//------------------------------------------------------------------------------
     void GraphicContext::swap_buffers()
     {
         SDL_GL_SwapBuffers();
