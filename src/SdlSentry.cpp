@@ -5,7 +5,6 @@
 
 #include <stdexcept>
 #include <SDL.h>
-#include <SDL_ttf.h>
 
 namespace qgl
 {
@@ -19,10 +18,6 @@ namespace qgl
             if (SDL_Init(SDL_INIT_VIDEO) < 0)
             {
                 throw std::runtime_error(SDL_GetError());
-            }
-            if (TTF_Init() < 0)
-            {
-                throw std::runtime_error(TTF_GetError());
             }
         }
         ref_count++;

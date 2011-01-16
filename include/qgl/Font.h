@@ -15,15 +15,25 @@
 
 #include "Vector.h"
 #include "Image.h"
+#include "SdlTtfSentry.h"
 
 namespace qgl
 {
+    class Font;
+    typedef std::tr1::shared_ptr<Font> FontPtr;
+
     /**
      * True Type Font
      **/
     class QGL_EXPORT Font
     {
     public:
+
+        /**
+         * Load the font from file.
+         **/
+        static FontPtr load_from_file(const std::string& file, unsigned int size);
+
         /**
          * Default Constructor
          **/
@@ -86,6 +96,8 @@ namespace qgl
         std::vector<ImagePtr> render_multiline(const std::string& text, const Vector3f& color) const;
 
     private:
+        SdlTtfSentry sdl_ttf_sentry;
+
         std::string file;
         unsigned int size;
         TTF_Font* font;
@@ -93,8 +105,6 @@ namespace qgl
         Font(const Font&);
         const Font& operator = (const Font&);
     };
-
-    typedef std::tr1::shared_ptr<Font> FontPtr;
 }
 
 #endif

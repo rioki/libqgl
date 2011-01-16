@@ -10,6 +10,12 @@
 namespace qgl
 {
 //------------------------------------------------------------------------------
+    FontPtr Font::load_from_file(const std::string& file, unsigned int size)
+    {
+        return FontPtr(new Font(file, size));
+    }
+
+//------------------------------------------------------------------------------
     Font::Font()
     : size(0), font(NULL) {}
 

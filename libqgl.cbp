@@ -46,10 +46,11 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-DBUILD_QGL" />
-					<Add directory="include\qgl" />
 				</Compiler>
 				<Linker>
 					<Add library="UnitTest++" />
+					<Add library="qgl" />
+					<Add directory="bin\Debug" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="test\run_qgltest.bat $(TARGET_OUTPUT_DIR) $(#sdl) $(#sdl_image) $(#sdl_ttf) $(#sdl_net) $(#glew) $(#sigc)" />
@@ -65,11 +66,12 @@
 					<Add option="-O2" />
 					<Add option="-Wall" />
 					<Add option="-DBUILD_QGL" />
-					<Add directory="include\qgl" />
 				</Compiler>
 				<Linker>
 					<Add option="-s" />
 					<Add library="UnitTest++" />
+					<Add library="qgl" />
+					<Add directory="bin\Release" />
 				</Linker>
 				<ExtraCommands>
 					<Add after="test\run_qgltest.bat $(TARGET_OUTPUT_DIR) $(#sdl) $(#sdl_image) $(#sdl_ttf) $(#sdl_net) $(#glew) $(#sigc)" />
@@ -89,6 +91,7 @@
 			<Add directory="$(#glew.include)" />
 			<Add directory="$(#sigc.include)" />
 			<Add directory="$(#unittestpp.include)" />
+			<Add directory="include" />
 		</Compiler>
 		<Linker>
 			<Add library="SDL" />
@@ -112,6 +115,10 @@
 			<Option target="libqgl (Release)" />
 		</Unit>
 		<Unit filename="include\qgl\ColorFormat.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Entry.h">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
 		</Unit>
@@ -171,6 +178,10 @@
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
 		</Unit>
+		<Unit filename="include\qgl\SdlTtfSentry.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
 		<Unit filename="include\qgl\Shader.h">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
@@ -195,6 +206,10 @@
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
 		</Unit>
+		<Unit filename="include\qgl\mathex.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
 		<Unit filename="include\qgl\utils.h">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
@@ -204,6 +219,10 @@
 			<Option target="libqgl (Release)" />
 		</Unit>
 		<Unit filename="src\ColorFormat.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\Entry.cpp">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
 		</Unit>
@@ -251,6 +270,10 @@
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
 		</Unit>
+		<Unit filename="src\SdlTtfSentry.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
 		<Unit filename="src\Shader.cpp">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
@@ -270,6 +293,10 @@
 		<Unit filename="src\utils.cpp">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="test\EntryTest.cpp">
+			<Option target="qgltest (Debug)" />
+			<Option target="qgltest (Release)" />
 		</Unit>
 		<Unit filename="test\qgltest.cpp">
 			<Option target="qgltest (Debug)" />
