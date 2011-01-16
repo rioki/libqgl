@@ -6,7 +6,7 @@
 		<Option pch_mode="2" />
 		<Option compiler="gcc" />
 		<Build>
-			<Target title="Debug">
+			<Target title="libqgl (Debug)">
 				<Option output="bin\Debug\libqgl" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Debug\" />
 				<Option type="3" />
@@ -20,7 +20,7 @@
 					<Add directory="include\qgl" />
 				</Compiler>
 			</Target>
-			<Target title="Release">
+			<Target title="libqgl (Release)">
 				<Option output="bin\Release\libqgl" prefix_auto="1" extension_auto="1" />
 				<Option object_output="obj\Release\" />
 				<Option type="3" />
@@ -37,7 +37,50 @@
 					<Add option="-s" />
 				</Linker>
 			</Target>
+			<Target title="qgltest (Debug)">
+				<Option output="bin\Debug\qgltest" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Debug\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-Wall" />
+					<Add option="-g" />
+					<Add option="-DBUILD_QGL" />
+					<Add directory="include\qgl" />
+				</Compiler>
+				<Linker>
+					<Add library="UnitTest++" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="test\run_qgltest.bat $(TARGET_OUTPUT_DIR) $(#sdl) $(#sdl_image) $(#sdl_ttf) $(#sdl_net) $(#glew) $(#sigc)" />
+					<Mode after="always" />
+				</ExtraCommands>
+			</Target>
+			<Target title="qgltest (Release)">
+				<Option output="bin\Release\qgltest" prefix_auto="1" extension_auto="1" />
+				<Option object_output="obj\Release\" />
+				<Option type="1" />
+				<Option compiler="gcc" />
+				<Compiler>
+					<Add option="-O2" />
+					<Add option="-Wall" />
+					<Add option="-DBUILD_QGL" />
+					<Add directory="include\qgl" />
+				</Compiler>
+				<Linker>
+					<Add option="-s" />
+					<Add library="UnitTest++" />
+				</Linker>
+				<ExtraCommands>
+					<Add after="test\run_qgltest.bat $(TARGET_OUTPUT_DIR) $(#sdl) $(#sdl_image) $(#sdl_ttf) $(#sdl_net) $(#glew) $(#sigc)" />
+					<Mode after="always" />
+				</ExtraCommands>
+			</Target>
 		</Build>
+		<VirtualTargets>
+			<Add alias="Debug" targets="libqgl (Debug);qgltest (Debug);" />
+			<Add alias="Release" targets="libqgl (Release);qgltest (Release);" />
+		</VirtualTargets>
 		<Compiler>
 			<Add directory="$(#sdl.include)" />
 			<Add directory="$(#sdl_image.include)" />
@@ -45,6 +88,7 @@
 			<Add directory="$(#sdl_net.include)" />
 			<Add directory="$(#glew.include)" />
 			<Add directory="$(#sigc.include)" />
+			<Add directory="$(#unittestpp.include)" />
 		</Compiler>
 		<Linker>
 			<Add library="SDL" />
@@ -61,48 +105,176 @@
 			<Add directory="$(#sdl_net.lib)" />
 			<Add directory="$(#glew.lib)" />
 			<Add directory="$(#sigc.lib)" />
+			<Add directory="$(#unittestpp.lib)" />
 		</Linker>
-		<Unit filename="include\qgl\Button.h" />
-		<Unit filename="include\qgl\ColorFormat.h" />
-		<Unit filename="include\qgl\Font.h" />
-		<Unit filename="include\qgl\FrameBuffer.h" />
-		<Unit filename="include\qgl\GraphicContext.h" />
-		<Unit filename="include\qgl\Image.h" />
-		<Unit filename="include\qgl\Input.h" />
-		<Unit filename="include\qgl\IpAddress.h" />
-		<Unit filename="include\qgl\Key.h" />
-		<Unit filename="include\qgl\Label.h" />
-		<Unit filename="include\qgl\Lock.h" />
-		<Unit filename="include\qgl\MouseButton.h" />
-		<Unit filename="include\qgl\Mutex.h" />
-		<Unit filename="include\qgl\Screen.h" />
-		<Unit filename="include\qgl\ScreenItem.h" />
-		<Unit filename="include\qgl\SdlSentry.h" />
-		<Unit filename="include\qgl\Shader.h" />
-		<Unit filename="include\qgl\Thread.h" />
-		<Unit filename="include\qgl\UdpSocket.h" />
-		<Unit filename="include\qgl\Vector.h" />
-		<Unit filename="include\qgl\Window.h" />
-		<Unit filename="include\qgl\config.h" />
-		<Unit filename="include\qgl\utils.h" />
-		<Unit filename="src\Button.cpp" />
-		<Unit filename="src\ColorFormat.cpp" />
-		<Unit filename="src\Font.cpp" />
-		<Unit filename="src\FrameBuffer.cpp" />
-		<Unit filename="src\GraphicContext.cpp" />
-		<Unit filename="src\Image.cpp" />
-		<Unit filename="src\Input.cpp" />
-		<Unit filename="src\IpAddress.cpp" />
-		<Unit filename="src\Label.cpp" />
-		<Unit filename="src\Mutex.cpp" />
-		<Unit filename="src\Screen.cpp" />
-		<Unit filename="src\ScreenItem.cpp" />
-		<Unit filename="src\SdlSentry.cpp" />
-		<Unit filename="src\Shader.cpp" />
-		<Unit filename="src\Thread.cpp" />
-		<Unit filename="src\UdpSocket.cpp" />
-		<Unit filename="src\Window.cpp" />
-		<Unit filename="src\utils.cpp" />
+		<Unit filename="include\qgl\Button.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\ColorFormat.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Font.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\FrameBuffer.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\GraphicContext.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Image.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Input.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\IpAddress.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Key.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Label.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Lock.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\MouseButton.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Mutex.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Screen.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\ScreenItem.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\SdlSentry.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Shader.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Thread.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\UdpSocket.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Vector.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\Window.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\config.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="include\qgl\utils.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\Button.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\ColorFormat.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\Font.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\FrameBuffer.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\GraphicContext.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\Image.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\Input.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\IpAddress.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\Label.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\Mutex.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\Screen.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\ScreenItem.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\SdlSentry.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\Shader.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\Thread.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\UdpSocket.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\Window.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\utils.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="test\qgltest.cpp">
+			<Option target="qgltest (Debug)" />
+			<Option target="qgltest (Release)" />
+		</Unit>
 		<Extensions>
 			<code_completion />
 			<envvars />
