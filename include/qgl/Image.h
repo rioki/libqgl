@@ -8,6 +8,7 @@
 #include <SDL.h>
 #include <tr1/memory>
 
+#include "SdlSentry.h"
 #include "Vector.h"
 #include "ColorFormat.h"
 
@@ -101,6 +102,7 @@ namespace qgl
         void load(const std::string& file);
 
     private:
+        SdlSentry sdl_sentry;
         std::string file;
         SDL_Surface* surface;
         mutable bool loaded_opengl;
