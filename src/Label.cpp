@@ -11,8 +11,15 @@ namespace qgl
     void Label::set_font(const FontPtr& f)
     {
         font = f;
-        text_image = font->render(text);
-        set_size(text_image->get_size());
+        if (font)
+        {
+            text_image = font->render(text);
+            set_size(text_image->get_size());
+        }
+        else
+        {
+            text_image.reset();
+        }
     }
 
 //------------------------------------------------------------------------------
@@ -25,8 +32,15 @@ namespace qgl
     void Label::set_text(const std::string& t)
     {
         text = t;
-        text_image = font->render(text);
-        set_size(text_image->get_size());
+        if (font)
+        {
+            text_image = font->render(text);
+            set_size(text_image->get_size());
+        }
+        else
+        {
+            text_image.reset();
+        }
     }
 
 //------------------------------------------------------------------------------
@@ -38,7 +52,7 @@ namespace qgl
 //------------------------------------------------------------------------------
     void Label::draw(GraphicContext& graphic) const
     {
-        if (visible)
+        if (visible && text_image)
         {
             graphic.enable_blending();
             graphic.draw_image(position, *text_image);
