@@ -13,7 +13,9 @@
 
 namespace qgl
 {
-    // REVIEW: The image should be divorced from the openGL handling.
+    class Image;
+    typedef std::tr1::shared_ptr<Image> ImagePtr;
+
 
     /**
      * 2D Image Buffer
@@ -21,6 +23,12 @@ namespace qgl
     class QGL_EXPORT Image
     {
     public:
+
+        /**
+         * Load a image from file.
+         **/
+        static ImagePtr load_from_file(const std::string& file);
+
         /**
          * Default Constructor
          **/
@@ -102,8 +110,6 @@ namespace qgl
         Image(const Image&);
         const Image& operator = (const Image&);
     };
-
-    typedef std::tr1::shared_ptr<Image> ImagePtr;
 }
 
 #endif

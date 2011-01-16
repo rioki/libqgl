@@ -13,6 +13,13 @@
 namespace qgl
 {
 //------------------------------------------------------------------------------
+    ImagePtr Image::load_from_file(const std::string& file)
+    {
+        ImagePtr image(new Image(file));
+        return image;
+    }
+
+//------------------------------------------------------------------------------
     Image::Image()
     : surface(NULL), loaded_opengl(false), gl_id(0) {}
 
