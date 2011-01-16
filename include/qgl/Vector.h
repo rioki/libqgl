@@ -8,6 +8,8 @@
 
 #include <cassert>
 
+#include "mathex.h"
+
 namespace qgl
 {
     /**
@@ -124,7 +126,7 @@ namespace qgl
             return data[i];
         }
 
-    private:
+    protected:
         T data[D];
     };
 
@@ -223,6 +225,19 @@ namespace qgl
         return !(a == b);
     }
 
+    template <unsigned int D, typename T>
+    bool close (const Vector<D, T>& a, const Vector<D, T>& b, T eps)
+    {
+        for (unsigned int i = 0; i < D; i++)
+        {
+            if (!close(a(i), b(i), eps))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
     template <typename T>
     Vector<2, T> create_vector2(T x, T y)
     {
@@ -253,20 +268,83 @@ namespace qgl
         return result;
     }
 
-    typedef Vector<2, int> Vector2i;
-    typedef Vector<2, unsigned int> Vector2ui;
-    typedef Vector<2, float> Vector2f;
-    typedef Vector<2, double> Vector2d;
+    template <typename T>
+    class Vector2 : public Vector<2, T>
+    {
+    public:
+        Vector2() {}
 
-    typedef Vector<3, int> Vector3i;
-    typedef Vector<3, unsigned int> Vector3ui;
-    typedef Vector<3, float> Vector3f;
-    typedef Vector<3, double> Vector3d;
+        Vector2(T x, T y)
+        {
+            Vector<2, T>::data[0] = x;
+            Vector<2, T>::data[1] = y;
+        }
 
-    typedef Vector<4, int> Vector4i;
-    typedef Vector<4, unsigned int> Vector4ui;
-    typedef Vector<4, float> Vector4f;
-    typedef Vector<4, double> Vector4d;
+        Vector2(const Vector<2, T>& other)
+        : Vector<2, T>(other) {}
+
+        template <typename OtherT>
+        Vector2(const Vector<2, OtherT>& other)
+        : Vector<2, T>(other) {}
+    };
+
+    template <typename T>
+    class Vector3 : public Vector<3, T>
+    {
+    public:
+        Vector3() {}
+
+        Vector3(T x, T y, T z)
+        {
+            Vector<3, T>::data[0] = x;
+            Vector<3, T>::data[1] = y;
+            Vector<3, T>::data[2] = z;
+        }
+
+        Vector3(const Vector<3, T>& other)
+        : Vector<3, T>(other) {}
+
+        template <typename OtherT>
+        Vector3(const Vector<3, OtherT>& other)
+        : Vector<3, T>(other) {}
+    };
+
+    template <typename T>
+    class Vector4 : public Vector<4, T>
+    {
+    public:
+        Vector4() {}
+
+        Vector4(T x, T y, T z, T m)
+        {
+            Vector<4, T>::data[0] = x;
+            Vector<4, T>::data[1] = y;
+            Vector<4, T>::data[2] = z;
+            Vector<4, T>::data[4] = m;
+        }
+
+        Vector4(const Vector<4, T>& other)
+        : Vector<4, T>(other) {}
+
+        template <typename OtherT>
+        Vector4(const Vector<4, OtherT>& other)
+        : Vector<4, T>(other) {}
+    };
+
+    typedef Vector2<int> Vector2i;
+    typedef Vector2<unsigned int> Vector2ui;
+    typedef Vector2<float> Vector2f;
+    typedef Vector2<double> Vector2d;
+
+    typedef Vector3<int> Vector3i;
+    typedef Vector3<unsigned int> Vector3ui;
+    typedef Vector3<float> Vector3f;
+    typedef Vector3<double> Vector3d;
+
+    typedef Vector4<int> Vector4i;
+    typedef Vector4<unsigned int> Vector4ui;
+    typedef Vector4<float> Vector4f;
+    typedef Vector4<double> Vector4d;
 }
 
 #endif
