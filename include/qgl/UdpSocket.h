@@ -33,6 +33,11 @@ namespace qgl
     public:
 
         /**
+         * Get the local address.
+         **/
+        static IpAddress get_local_address();
+
+        /**
          * Create an UDP socket with unspecific port.
          **/
         UdpSocket();
