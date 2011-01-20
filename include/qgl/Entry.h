@@ -1,8 +1,8 @@
 // Quick Game Library
 // Copyright 2010-2011 Sean Farrell
 
-#ifndef _QGL_BUTTON_H_
-#define _QGL_BUTTON_H_
+#ifndef _QGL_ENTRY_H_
+#define _QGL_ENTRY_H_
 
 #include <string>
 
