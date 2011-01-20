@@ -69,6 +69,8 @@ namespace qgl
     private:
         Label label;
         ImagePtr background;
+
+        void update_size();
     };
 }
 

@@ -3,6 +3,8 @@
 
 #include "Entry.h"
 
+#include <cmath>
+
 #include "GraphicContext.h"
 
 namespace qgl
@@ -17,6 +19,7 @@ namespace qgl
     void Entry::set_text(const std::string& value)
     {
         label.set_text(value);
+        update_size();
     }
 
 //------------------------------------------------------------------------------
@@ -29,6 +32,7 @@ namespace qgl
     void Entry::set_font(FontPtr value)
     {
         label.set_font(value);
+        update_size();
     }
 
 //------------------------------------------------------------------------------
@@ -41,10 +45,7 @@ namespace qgl
     void Entry::set_background(ImagePtr value)
     {
         background = value;
-        if (background)
-        {
-            set_size(Vector2f(background->get_width(), background->get_height()));
-        }
+        update_size();
     }
 
 //------------------------------------------------------------------------------
@@ -66,5 +67,21 @@ namespace qgl
         label.draw(gc);
 
         gc.pop_model_view_matrix();
+    }
+
+//------------------------------------------------------------------------------
+    void Entry::update_size()
+    {
+        if (background)
+        {
+            Vector2f size;
+            size(0) = std::max<float>(background->get_width(), label.get_size()(0));
+            size(1) = std::max<float>(background->get_height(), label.get_size()(1));
+            set_size(size);
+        }
+        else
+        {
+            set_size(label.get_size());
+        }
     }
 }
