@@ -6,18 +6,13 @@
 
 #include "config.h"
 
-#include <string>
-#include <queue>
+#include <vector>
 
+#include "WinSockSentry.h"
 #include "IpAddress.h"
 
 namespace qgl
 {
-    /**
-     * The maximum packet size to use.
-     **/
-    const unsigned int MAX_PACKET_SIZE = 512;
-
     /**
      * UDP Socket
      *
@@ -27,7 +22,27 @@ namespace qgl
     {
     public:
 
+        UdpSocket();
 
+        UdpSocket(unsigned short port);
+
+        ~UdpSocket();
+
+        void send(const IpAddress& address, const std::vector<unsigned char>& payload);
+
+        bool recive(IpAddress& address, std::vector<unsigned char>& payload);
+
+    private:
+        #ifdef _WIN32
+        WinSockSentry sentry;
+        #endif
+
+        int handle;
+
+        void init(unsigned short port = 0);
+
+        UdpSocket(const UdpSocket&);
+        const UdpSocket& operator = (const UdpSocket&);
     };
 }
 

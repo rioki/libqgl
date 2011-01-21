@@ -6,153 +6,102 @@
 #include <cassert>
 #include <stdexcept>
 
-#include "Lock.h"
+#if _WIN32
+#include <winsock2.h>
+#else
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <fcntl.h>
+#endif
 
 namespace qgl
 {
 //------------------------------------------------------------------------------
-    IpAddress UdpSocket::get_local_address()
+    UdpSocket::UdpSocket()
     {
-        /*IPaddress adr;
-        adr.host = NULL;
-        adr.port = 12;
-
-        const char* host = SDLNet_ResolveIP(&adr);
-        SDLNet_ResolveHost(&adr, host, 0);
-        return IpAddress(adr);*/
+        init();
     }
 
 //------------------------------------------------------------------------------
-    UdpSocket::UdpSocket()
-    : port(0),
-      destructing(false),
-      comunication_thread(sigc::mem_fun(this, &UdpSocket::comunication_handler)) {}
-
-//------------------------------------------------------------------------------
     UdpSocket::UdpSocket(unsigned short p)
-    : port(p),
-      destructing(false),
-      comunication_thread(sigc::mem_fun(this, &UdpSocket::comunication_handler)) {}
+    {
+        init(p);
+    }
 
 //------------------------------------------------------------------------------
     UdpSocket::~UdpSocket()
     {
-        destructing = true;
-        comunication_thread.wait();
+        #ifdef _WIN32
+        closesocket(handle);
+        #else
+        close(handle);
+        #endif
     }
 
 //------------------------------------------------------------------------------
-    void UdpSocket::send(const IpAddress& address, const std::vector<unsigned char>& data)
+    void UdpSocket::send(const IpAddress& address, const std::vector<unsigned char>& payload)
     {
-        if (data.size() > MAX_PACKET_SIZE)
-        {
-            throw std::logic_error("UdpSocket::send: Trying to send more data then MAX_PACKET_SIZE.");
-        }
-        if (data.size() == 0)
-        {
-            throw std::logic_error("UdpSocket::send: Trying to send empty packet.");
-        }
+        sockaddr_in c_addr = address.get_c_adr();
+        int sent_bytes = sendto(handle, (const char*)&payload[0], payload.size(), 0, (sockaddr*)&c_addr, sizeof(sockaddr_in));
 
-        SendHandover handover;
-        handover.address = address;
-        handover.data = data;
-
+        if (sent_bytes != payload.size())
         {
-            Lock<Mutex> lock(mutex);
-            send_queue.push(handover);
+            throw std::runtime_error("Failed to send packet.");
         }
     }
 
 //------------------------------------------------------------------------------
-    sigc::signal<void, const IpAddress&, const std::vector<unsigned char>&>& UdpSocket::get_data_recived_signal()
+    bool UdpSocket::recive(IpAddress& address, std::vector<unsigned char>& payload)
     {
-        return data_recived_signal;
+        std::vector<unsigned char> buff(256);
+
+        sockaddr_in adr;
+        int adr_len = sizeof(sockaddr_in);
+
+        int received_bytes = recvfrom(handle, (char*)&buff[0], buff.size(), 0, (sockaddr*)&adr, &adr_len);
+        if (received_bytes > 0)
+        {
+            payload.resize(received_bytes);
+            std::copy(buff.begin(), buff.begin() + received_bytes, payload.begin());
+            address = IpAddress(adr);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
 //------------------------------------------------------------------------------
-    void UdpSocket::comunication_handler()
+    void UdpSocket::init(unsigned short port)
     {
-        UDPsocket socket = NULL;
-        UDPpacket* packet = NULL;
-
-        SendHandover send_handover;
-        bool send_queue_empty = true;
-
-        try
+        handle = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+        if (handle <= 0)
         {
-            socket = SDLNet_UDP_Open(port);
-            if (socket == NULL)
-            {
-                throw std::runtime_error(SDLNet_GetError());
-            }
-
-            packet = SDLNet_AllocPacket(512);
-            if (packet == NULL)
-            {
-                throw std::runtime_error(SDLNet_GetError());
-            }
-
-            while (! destructing)
-            {
-                // send
-                {
-                    Lock<Mutex> lock(mutex);
-                    if (! send_queue.empty())
-                    {
-                        send_handover = send_queue.front();
-                        send_queue.pop();
-                        send_queue_empty = false;
-                    }
-                    else
-                    {
-                        send_queue_empty = true;
-                    }
-                }
-
-                if (! send_queue_empty)
-                {
-                    // these conditions are checked in UdpSocket::send;
-                    assert(send_handover.data.size() != 0);
-                    assert(send_handover.data.size() <= packet->maxlen);
-
-                    packet->channel = -1;
-                    memcpy(packet->data, &send_handover.data[0], send_handover.data.size());
-                    packet->len = send_handover.data.size();
-                    packet->address = send_handover.address.get_c_object();
-                    packet->status = 0;
-
-                    SDLNet_UDP_Send(socket, packet->channel, packet);
-                }
-
-                // revice
-                int recv_result = SDLNet_UDP_Recv(socket, packet);
-                if (recv_result == -1)
-                {
-                    throw std::logic_error(SDLNet_GetError());
-                }
-                if (recv_result == 1)
-                {
-                    assert(packet->len != 0); // this "never" happens
-                    assert(packet->len <= packet->maxlen); // ok this would be a SDL_net bug
-
-                    std::vector<unsigned char> data(packet->len);
-                    memcpy(&data[0], packet->data, packet->len);
-
-                    IpAddress address(packet->address);
-
-                    data_recived_signal(address, data);
-                }
-            }
-
-            SDLNet_FreePacket(packet);
-            SDLNet_UDP_Close(socket);
+            throw std::runtime_error("Failed to create socket.");
         }
-        catch (...)
+        sockaddr_in address;
+        address.sin_family = AF_INET;
+        address.sin_addr.s_addr = INADDR_ANY;
+        address.sin_port = htons(port);
+
+        if (bind(handle, (const sockaddr*)&address, sizeof(sockaddr_in)) < 0)
         {
-            SDLNet_FreePacket(packet);
-            SDLNet_UDP_Close(socket);
-            throw;
+            throw std::runtime_error("Failed to bind socket.");
         }
+
+        #ifdef _WIN32
+        DWORD nonBlocking = 1;
+        if (ioctlsocket(handle, FIONBIO, &nonBlocking) != 0)
+        {
+            throw std::runtime_error("Failed to set non-blocking socket.");
+        }
+        #else
+        int nonBlocking = 1;
+        if (fcntl(handle, F_SETFL, O_NONBLOCK, nonBlocking) == -1)
+        {
+            throw std::runtime_error("Failed to set non-blocking socket.");
+        }
+        #endif
     }
-
 }

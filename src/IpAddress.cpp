@@ -10,116 +10,68 @@ namespace qgl
 //------------------------------------------------------------------------------
     IpAddress::IpAddress()
     {
-        // make the address really invalid
-        c_object.host = INADDR_ANY;
-        c_object.port = 0;
+        address.sin_family = AF_INET;
+        address.sin_addr.s_addr = INADDR_ANY;
+        address.sin_port = 0;
     }
 
 //------------------------------------------------------------------------------
-    IpAddress::IpAddress(unsigned short port)
+    IpAddress::IpAddress(sockaddr_in c_adr)
     {
-        if (SDLNet_ResolveHost(&c_object, NULL, port) < 0)
-        {
-            throw std::runtime_error(SDLNet_GetError());
-        }
+        address = c_adr;
     }
 
 //------------------------------------------------------------------------------
-    IpAddress::IpAddress(const std::string& host, unsigned short port)
+    IpAddress::IpAddress(unsigned long host, unsigned short port)
     {
-        if (SDLNet_ResolveHost(&c_object, host.c_str(), port) < 0)
-        {
-            throw std::runtime_error(SDLNet_GetError());
-        }
+        address.sin_family = AF_INET;
+        address.sin_addr.s_addr = htonl(host);
+        address.sin_port = htons(port);
     }
 
 //------------------------------------------------------------------------------
-    IpAddress::IpAddress(const std::string& host)
+    IpAddress::IpAddress(unsigned char a, unsigned char b, unsigned char c, unsigned char d, unsigned short port)
     {
-        if (SDLNet_ResolveHost(&c_object, host.c_str(), 0) < 0)
-        {
-            throw std::runtime_error(SDLNet_GetError());
-        }
+        unsigned int host = (a << 24) | (b << 16) | (c << 8) | d;
+
+        address.sin_family = AF_INET;
+        address.sin_addr.s_addr = htonl(host);
+        address.sin_port = htons(port);
     }
 
 //------------------------------------------------------------------------------
-    IpAddress::IpAddress(IPaddress co)
+    unsigned long IpAddress::get_host() const
     {
-        c_object = co;
+        return ntohl(address.sin_addr.s_addr);
     }
 
 //------------------------------------------------------------------------------
-    IpAddress::IpAddress(const IpAddress& orig)
+    void IpAddress::set_host(unsigned long value)
     {
-        c_object = orig.c_object;
+        address.sin_addr.s_addr = htonl(value);
     }
 
 //------------------------------------------------------------------------------
-    IpAddress::~IpAddress() {}
-
-//------------------------------------------------------------------------------
-    const IpAddress& IpAddress::operator = (const IpAddress& orig)
+    void IpAddress::set_host(unsigned char a, unsigned char b, unsigned char c, unsigned char d)
     {
-        c_object = orig.c_object;
-        return *this;
+        set_host((a << 24) | (b << 16) | (c << 8) | d);
     }
 
 //------------------------------------------------------------------------------
-    unsigned int IpAddress::get_host_address()
+    unsigned short IpAddress::get_port() const
     {
-        return SDLNet_Read32(&c_object.host);
+        return ntohs(address.sin_port);
     }
 
 //------------------------------------------------------------------------------
-    void IpAddress::set_host_address(unsigned int value)
+    void IpAddress::set_port(unsigned short value)
     {
-        SDLNet_Write32(value, &c_object.host);
+        address.sin_port = htons(value);
     }
 
 //------------------------------------------------------------------------------
-    std::string IpAddress::get_host_name()
+    sockaddr_in IpAddress::get_c_adr() const
     {
-        const char* host = SDLNet_ResolveIP(&c_object);
-        if (host != NULL)
-        {
-            return std::string(host);
-        }
-        else
-        {
-            throw std::runtime_error(SDLNet_GetError());
-        }
-    }
-
-//------------------------------------------------------------------------------
-    void IpAddress::set_host_name(const std::string& value)
-    {
-        if (SDLNet_ResolveHost(&c_object, value.c_str(), get_port()) < 0)
-        {
-            throw std::runtime_error(SDLNet_GetError());
-        }
-    }
-
-//------------------------------------------------------------------------------
-    unsigned int IpAddress::get_port()
-    {
-        return SDLNet_Read16(&c_object.port);
-    }
-
-//------------------------------------------------------------------------------
-    void IpAddress::set_port(const unsigned int value)
-    {
-        SDLNet_Write16(value, &c_object.port);
-    }
-
-//------------------------------------------------------------------------------
-    IPaddress IpAddress::get_c_object()
-    {
-        return c_object;
-    }
-
-//------------------------------------------------------------------------------
-    const IPaddress IpAddress::get_c_object() const
-    {
-        return c_object;
+        return address;
     }
 }

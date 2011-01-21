@@ -197,6 +197,10 @@
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
 		</Unit>
+		<Unit filename="include\qgl\WinSockSentry.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
 		<Unit filename="include\qgl\Window.h">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
@@ -282,6 +286,10 @@
 			<Option target="libqgl (Release)" />
 		</Unit>
 		<Unit filename="src\UdpSocket.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
+		<Unit filename="src\WinSockSentry.cpp">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
 		</Unit>
