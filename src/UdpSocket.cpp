@@ -14,8 +14,14 @@
 #include <fcntl.h>
 #endif
 
+#include "WinSockSentry.h"
+
 namespace qgl
 {
+    #ifdef _WIN32
+    WinSockSentry sentry;
+    #endif
+
 //------------------------------------------------------------------------------
     UdpSocket::UdpSocket()
     {
@@ -36,6 +42,21 @@ namespace qgl
         #else
         close(handle);
         #endif
+    }
+
+//------------------------------------------------------------------------------
+    IpAddress UdpSocket::get_local_address() const
+    {
+        sockaddr_in adr;
+        int adr_len = sizeof(sockaddr_in);
+        if (getsockname(handle, (sockaddr*)&adr, &adr_len) < 0)
+        {
+            throw std::runtime_error("Failed to get the local address.");
+        }
+        else
+        {
+            return IpAddress(adr);
+        }
     }
 
 //------------------------------------------------------------------------------

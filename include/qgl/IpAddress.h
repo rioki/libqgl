@@ -7,6 +7,7 @@
 #include "config.h"
 
 #include <string>
+#include <iostream>
 
 #if _WIN32
 #include <winsock2.h>
@@ -28,6 +29,8 @@ namespace qgl
     {
     public:
 
+        static IpAddress resolve(const std::string& hostname);
+
         IpAddress();
 
         IpAddress(sockaddr_in c_adr);
@@ -37,6 +40,14 @@ namespace qgl
         IpAddress(unsigned char a, unsigned char b, unsigned char c, unsigned char d, unsigned short port);
 
         unsigned long get_host() const;
+
+        unsigned char get_a() const;
+
+        unsigned char get_b() const;
+
+        unsigned char get_c() const;
+
+        unsigned char get_d() const;
 
         void set_host(unsigned long value);
 
@@ -51,6 +62,12 @@ namespace qgl
     private:
         sockaddr_in address;
     };
+
+    QGL_EXPORT bool operator == (const IpAddress& a, const IpAddress& b);
+
+    QGL_EXPORT bool operator != (const IpAddress& a, const IpAddress& b);
+
+    QGL_EXPORT std::ostream& operator << (std::ostream& os, const IpAddress& adr);
 }
 
 #endif

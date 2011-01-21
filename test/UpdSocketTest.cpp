@@ -3,6 +3,7 @@
 
 #include <UnitTest++/UnitTest++.h>
 
+#include <iostream>
 #include <qgl/UdpSocket.h>
 
 SUITE(UdpSocket)
@@ -27,5 +28,23 @@ SUITE(UdpSocket)
         while (sock_a.recive(recv_adr, recv_payload) == false) {}
 
         CHECK(std::vector<unsigned char>(1, 123) == recv_payload);
+    }
+
+//-----------------------------------------------------------------------------
+    TEST(get_local_address)
+    {
+        qgl::UdpSocket socket(1235);
+        qgl::IpAddress address = socket.get_local_address();
+
+        CHECK_EQUAL(1235, address.get_port());
+        //std::cout << std::hex << address.get_host() << std::endl;
+    }
+
+//-----------------------------------------------------------------------------
+    TEST(resolve_address)
+    {
+        qgl::IpAddress adr = qgl::IpAddress::resolve("localhost");
+        qgl::IpAddress ref(127, 0, 0, 0, 0);
+        CHECK_EQUAL(ref, adr);
     }
 }

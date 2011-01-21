@@ -8,7 +8,6 @@
 
 #include <vector>
 
-#include "WinSockSentry.h"
 #include "IpAddress.h"
 
 namespace qgl
@@ -28,15 +27,13 @@ namespace qgl
 
         ~UdpSocket();
 
+        IpAddress get_local_address() const;
+
         void send(const IpAddress& address, const std::vector<unsigned char>& payload);
 
         bool recive(IpAddress& address, std::vector<unsigned char>& payload);
 
     private:
-        #ifdef _WIN32
-        WinSockSentry sentry;
-        #endif
-
         int handle;
 
         void init(unsigned short port = 0);
