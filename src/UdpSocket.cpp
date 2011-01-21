@@ -13,13 +13,13 @@ namespace qgl
 //------------------------------------------------------------------------------
     IpAddress UdpSocket::get_local_address()
     {
-        IPaddress adr;
+        /*IPaddress adr;
         adr.host = NULL;
         adr.port = 12;
 
         const char* host = SDLNet_ResolveIP(&adr);
         SDLNet_ResolveHost(&adr, host, 0);
-        return IpAddress(adr);
+        return IpAddress(adr);*/
     }
 
 //------------------------------------------------------------------------------

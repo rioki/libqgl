@@ -7,10 +7,8 @@
 
 SUITE(UdpSocket)
 {
-    TEST(get_local_address)
+    TEST(default_constructible)
     {
-        qgl::IpAddress adr = qgl::UdpSocket::get_local_address();
-        unsigned int ip = adr.get_host_address();
-        CHECK(ip != 0);
+        qgl::UdpSocket socket;
     }
 }
