@@ -5,29 +5,43 @@
 
 #include <stdexcept>
 
+// PORT: we want htons and friends and gethostname
+#ifdef _WIN32
+#include <winsock2.h>
+#else
+#include <netinet/in.h>
+#endif
+
+
 namespace qgl
 {
 //------------------------------------------------------------------------------
     IpAddress IpAddress::resolve(const std::string& hostname)
     {
-        hostent* hdata = gethostbyname(hostname.c_str());
-        if (hdata == NULL)
-        {
-            throw std::runtime_error("Failed to resolve hostname.");
-        }
-        return IpAddress(ntohl(*hdata->h_addr), 0);
+        // NOTE: We use this scheme, since we need a valid instance of
+        // SdlNetSentry active.
+        IpAddress address;
+        address.resolve_impl(hostname);
+        return address;
+    }
+
+//------------------------------------------------------------------------------
+    IpAddress IpAddress::get_local_address()
+    {
+        IpAddress address;
+        address.get_local_address_impl();
+        return address;
     }
 
 //------------------------------------------------------------------------------
     IpAddress::IpAddress()
     {
-        address.sin_family = AF_INET;
-        address.sin_addr.s_addr = INADDR_ANY;
-        address.sin_port = 0;
+        address.host = INADDR_NONE;
+        address.port = 0;
     }
 
 //------------------------------------------------------------------------------
-    IpAddress::IpAddress(sockaddr_in c_adr)
+    IpAddress::IpAddress(IPaddress c_adr)
     {
         address = c_adr;
     }
@@ -35,9 +49,8 @@ namespace qgl
 //------------------------------------------------------------------------------
     IpAddress::IpAddress(unsigned long host, unsigned short port)
     {
-        address.sin_family = AF_INET;
-        address.sin_addr.s_addr = htonl(host);
-        address.sin_port = htons(port);
+        address.host = htonl(host);
+        address.port = htons(port);
     }
 
 //------------------------------------------------------------------------------
@@ -45,15 +58,14 @@ namespace qgl
     {
         unsigned long host = ((unsigned long)a << 24) | ((unsigned long)b << 16) | ((unsigned long)c << 8) | (unsigned long)d;
 
-        address.sin_family = AF_INET;
-        address.sin_addr.s_addr = htonl(host);
-        address.sin_port = htons(port);
+        address.host = htonl(host);
+        address.port = htons(port);
     }
 
 //------------------------------------------------------------------------------
     unsigned long IpAddress::get_host() const
     {
-        return ntohl(address.sin_addr.s_addr);
+        return ntohl(address.host);
     }
 
 //------------------------------------------------------------------------------
@@ -87,7 +99,7 @@ namespace qgl
 //------------------------------------------------------------------------------
     void IpAddress::set_host(unsigned long value)
     {
-        address.sin_addr.s_addr = htonl(value);
+        address.host = htonl(value);
     }
 
 //------------------------------------------------------------------------------
@@ -100,19 +112,39 @@ namespace qgl
 //------------------------------------------------------------------------------
     unsigned short IpAddress::get_port() const
     {
-        return ntohs(address.sin_port);
+        return ntohs(address.port);
     }
 
 //------------------------------------------------------------------------------
     void IpAddress::set_port(unsigned short value)
     {
-        address.sin_port = htons(value);
+        address.port = htons(value);
     }
 
 //------------------------------------------------------------------------------
-    sockaddr_in IpAddress::get_c_adr() const
+    IPaddress IpAddress::get_c_adr() const
     {
         return address;
+    }
+
+//------------------------------------------------------------------------------
+    void IpAddress::resolve_impl(const std::string& hostname)
+    {
+        if (SDLNet_ResolveHost(&address, &hostname[0], 0) == -1)
+        {
+            throw std::runtime_error(SDLNet_GetError());
+        }
+    }
+
+//------------------------------------------------------------------------------
+    void IpAddress::get_local_address_impl()
+    {
+        char buff[512];
+        if (gethostname(buff, 512) != 0)
+        {
+            throw std::runtime_error("Failed to get host name.");
+        }
+        resolve_impl(std::string(buff));
     }
 
 //------------------------------------------------------------------------------

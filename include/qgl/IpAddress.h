@@ -8,14 +8,9 @@
 
 #include <string>
 #include <iostream>
+#include <SDL_net.h>
 
-#if _WIN32
-#include <winsock2.h>
-#else
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <fcntl.h>
-#endif
+#include "SdlNetSentry.h"
 
 namespace qgl
 {
@@ -31,9 +26,11 @@ namespace qgl
 
         static IpAddress resolve(const std::string& hostname);
 
+        static IpAddress get_local_address();
+
         IpAddress();
 
-        IpAddress(sockaddr_in c_adr);
+        IpAddress(IPaddress c_adr);
 
         IpAddress(unsigned long host, unsigned short port);
 
@@ -57,10 +54,14 @@ namespace qgl
 
         void set_port(unsigned short value);
 
-        sockaddr_in get_c_adr() const;
+        IPaddress get_c_adr() const;
 
     private:
-        sockaddr_in address;
+        SdlNetSentry sentry;
+        IPaddress address;
+
+        void resolve_impl(const std::string& hostname);
+        void get_local_address_impl();
     };
 
     QGL_EXPORT bool operator == (const IpAddress& a, const IpAddress& b);

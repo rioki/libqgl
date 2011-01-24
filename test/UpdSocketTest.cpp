@@ -15,6 +15,13 @@ SUITE(UdpSocket)
     }
 
 //-----------------------------------------------------------------------------
+    TEST(default_max_packet_size_is_512)
+    {
+        qgl::UdpSocket socket;
+        CHECK_EQUAL(512, socket.get_max_packet_size());
+    }
+
+//-----------------------------------------------------------------------------
     TEST(simple_send_recive)
     {
         qgl::UdpSocket sock_a(1234);
@@ -25,7 +32,7 @@ SUITE(UdpSocket)
 
         qgl::IpAddress recv_adr;
         std::vector<unsigned char> recv_payload;
-        while (sock_a.recive(recv_adr, recv_payload) == false) {}
+        while (!sock_a.recive(recv_adr, recv_payload)) {}
 
         CHECK(std::vector<unsigned char>(1, 123) == recv_payload);
     }
@@ -33,18 +40,16 @@ SUITE(UdpSocket)
 //-----------------------------------------------------------------------------
     TEST(get_local_address)
     {
-        qgl::UdpSocket socket(1235);
-        qgl::IpAddress address = socket.get_local_address();
+        qgl::IpAddress address = qgl::IpAddress::get_local_address();
 
-        CHECK_EQUAL(1235, address.get_port());
-        //std::cout << std::hex << address.get_host() << std::endl;
+        CHECK(qgl::IpAddress() != address);
     }
 
 //-----------------------------------------------------------------------------
     TEST(resolve_address)
     {
         qgl::IpAddress adr = qgl::IpAddress::resolve("localhost");
-        qgl::IpAddress ref(127, 0, 0, 0, 0);
+        qgl::IpAddress ref(127, 0, 0, 1, 0);
         CHECK_EQUAL(ref, adr);
     }
 }

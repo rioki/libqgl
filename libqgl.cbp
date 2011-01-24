@@ -53,7 +53,7 @@
 					<Add directory="bin\Debug" />
 				</Linker>
 				<ExtraCommands>
-					<Add after="test\run_qgltest.bat $(TARGET_OUTPUT_DIR) $(#sdl) $(#sdl_image) $(#sdl_ttf) $(#glew) $(#sigc)" />
+					<Add after="test\run_qgltest.bat $(TARGET_OUTPUT_DIR) $(#sdl) $(#sdl_image) $(#sdl_ttf) $(#sdl_net) $(#glew) $(#sigc)" />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -74,7 +74,7 @@
 					<Add directory="bin\Release" />
 				</Linker>
 				<ExtraCommands>
-					<Add after="test\run_qgltest.bat $(TARGET_OUTPUT_DIR) $(#sdl) $(#sdl_image) $(#sdl_ttf) $(#glew) $(#sigc)" />
+					<Add after="test\run_qgltest.bat $(TARGET_OUTPUT_DIR) $(#sdl) $(#sdl_image) $(#sdl_ttf) $(#sdl_net) $(#glew) $(#sigc)" />
 					<Mode after="always" />
 				</ExtraCommands>
 			</Target>
@@ -97,6 +97,8 @@
 			<Add library="SDL" />
 			<Add library="SDL_image" />
 			<Add library="SDL_ttf" />
+			<Add library="SDL_net" />
+			<Add library="wsock32" />
 			<Add library="glew32" />
 			<Add library="opengl32" />
 			<Add library="glu32" />
@@ -173,6 +175,10 @@
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
 		</Unit>
+		<Unit filename="include\qgl\SdlNetSentry.h">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
 		<Unit filename="include\qgl\SdlSentry.h">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
@@ -194,10 +200,6 @@
 			<Option target="libqgl (Release)" />
 		</Unit>
 		<Unit filename="include\qgl\Vector.h">
-			<Option target="libqgl (Debug)" />
-			<Option target="libqgl (Release)" />
-		</Unit>
-		<Unit filename="include\qgl\WinSockSentry.h">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
 		</Unit>
@@ -269,6 +271,10 @@
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
 		</Unit>
+		<Unit filename="src\SdlNetSentry.cpp">
+			<Option target="libqgl (Debug)" />
+			<Option target="libqgl (Release)" />
+		</Unit>
 		<Unit filename="src\SdlSentry.cpp">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
@@ -286,10 +292,6 @@
 			<Option target="libqgl (Release)" />
 		</Unit>
 		<Unit filename="src\UdpSocket.cpp">
-			<Option target="libqgl (Debug)" />
-			<Option target="libqgl (Release)" />
-		</Unit>
-		<Unit filename="src\WinSockSentry.cpp">
 			<Option target="libqgl (Debug)" />
 			<Option target="libqgl (Release)" />
 		</Unit>
