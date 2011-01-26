@@ -307,6 +307,10 @@
 			<Option target="qgltest (Debug)" />
 			<Option target="qgltest (Release)" />
 		</Unit>
+		<Unit filename="test\ScreenTest.cpp">
+			<Option target="qgltest (Debug)" />
+			<Option target="qgltest (Release)" />
+		</Unit>
 		<Unit filename="test\UpdSocketTest.cpp">
 			<Option target="qgltest (Debug)" />
 			<Option target="qgltest (Release)" />

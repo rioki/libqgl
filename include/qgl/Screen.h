@@ -19,23 +19,57 @@ namespace qgl
     class ScreenItem;
     class GraphicContext;
 
+    /**
+     * 2D Screen
+     **/
     class QGL_EXPORT Screen
     {
     public:
-        /** Default constructor */
+        /**
+         * Default Constructor
+         *
+         * This will create a screen with 640x480 size.
+         **/
         Screen();
 
-        /** Default destructor */
+        /**
+         * Constructor
+         *
+         * This will create a screen with initial size.
+         *
+         * @param size initial size
+         **/
+        Screen(const Vector2d& size);
+
+        /**
+         * Default destructor
+         **/
         virtual ~Screen();
 
+        /**
+         * Get the size of the screen.
+         **/
         const Vector2f& get_size() const;
 
+        /**
+         * Get the width of the screen.
+         **/
         float get_width() const;
 
+        /**
+         * Get the height of the screen.
+         **/
         float get_height() const;
 
+        /**
+         * Set the size of the screen.
+         **/
         void set_size(const Vector2f& value);
 
+        /**
+         * Update the screen.
+         **/
+        // REVIEW: Does this even make sence?
         virtual void update();
 
         void add_item(ScreenItem& item);
@@ -56,10 +90,27 @@ namespace qgl
 
         virtual void handle_key_up(Key key);
 
+        /**
+         * Draw screen.
+         **/
         virtual void draw(GraphicContext& graphic) const;
 
     protected:
+        /**
+         * Setup the fullscreen effect.
+         *
+         * This method is called prior to rendering the first pass. This
+         * method should be overridden if the effect needs to change each
+         * frame.
+         **/
         virtual void setup_fullscreen_effect(GraphicContext& graphic) const;
+
+        /**
+         * Draw the actual contents of the screen.
+         *
+         * This method can be used to change rendering behavior. This method
+         * calls each ScreenItem to render itsself.
+         **/
         virtual void draw_contents(GraphicContext& graphic) const;
 
     private:
