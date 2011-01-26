@@ -7,6 +7,7 @@
 #include "config.h"
 
 #include <cassert>
+#include <iostream>
 
 #include "mathex.h"
 
@@ -236,6 +237,22 @@ namespace qgl
             }
         }
         return true;
+    }
+
+    template <unsigned int D, typename T>
+    std::ostream& operator << (std::ostream& os, const Vector<D, T>& v)
+    {
+        os << "(";
+        for (unsigned int i = 0; i < D; i++)
+        {
+            os << v(i);
+            if (i != D-1)
+            {
+                os << ", ";
+            }
+        }
+        os << ")";
+        return os;
     }
 
     template <typename T>
